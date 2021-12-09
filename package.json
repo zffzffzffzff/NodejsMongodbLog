@@ -13,5 +13,8 @@
   ],
   "author": "zff",
   "license": "GNU",
-  "git repository": "https://github.com/zffzffzffzff/NodejsMongodbLog"
+  "git repository": "https://github.com/zffzffzffzff/NodejsMongodbLog",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
