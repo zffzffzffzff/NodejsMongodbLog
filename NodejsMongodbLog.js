@@ -14,6 +14,7 @@ const mongoose = require('mongoose');
 // kitty.save().then(() => console.log('meow!'));
 
 app.use('/',express.static('public'))
+app.use('/',express.static('photo'))
 app.get("/input", (req, res) => {
     res.send(req.query)
     console.log(req.query)
