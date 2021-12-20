@@ -1,8 +1,30 @@
+token :
+
 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
+
+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
+
+连接字符串：
+
+mongodb://172.21.2.236:27017
+
+ssh osuser@172.21.2.236
 
 
 
 ![image-20211206235656920](image-20211206235656920.png)
 
 ![image-20211206235733435](image-20211206235733435.png)
+
+
+
+![image-20211215035130596](image-20211215035130596.png)
+
+![image-20211215035233042](image-20211215035233042.png)
+
+
+
+![image-20211215035654676](image-20211215035654676.png)
+
+![image-20211215035955290](image-20211215035955290.png)
 
