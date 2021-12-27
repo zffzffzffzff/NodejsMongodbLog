@@ -13,6 +13,7 @@ const mongoose = require('mongoose');
 // const Cat = mongoose.model('cat1', schema);
 // const kitty = new Cat({ name: 'testZildjian' });
 // kitty.save().then(() => console.log('meow!'));
+// model名.find({查询条件}，callback(err, 查询结果)=>{})
 
 app.use('/',express.static('public'))
 app.use('/',express.static('photo'))
@@ -61,8 +62,8 @@ app.get("/loginCheck",(req,res) => {
 
 //下拉列表
 app.get("/dropdown",(req,res) => {
-    if(uname == '')res.send("<a class='dropdown-item' href='login.html'>登录</a> <a class='dropdown-item' href='reg.jsp'>注册</a>");
-    else res.send("<a class='dropdown-item' href='changePwd.jsp'>修改密码</a> <a class='dropdown-item' onclick='logout()'>注销</a>"); 
+    if(uname == '')res.send("<a class='dropdown-item' href='login.html'>登录</a> <a class='dropdown-item' href='reg.html'>注册</a>");
+    else res.send("<a class='dropdown-item' href='changePwd.html'>修改密码</a> <a class='dropdown-item' onclick='logout()'>注销</a>"); 
 })
 
 
