@@ -1,19 +1,8 @@
 const express = require("express")
 const ejs = require('ejs')
 const app = express()
+const DB = require('./module/module_db')
 const mongoose = require('mongoose');
-
-// mongoose.connect('mongodb://172.21.2.236:27017/190110910539');
-// const schema = {
-//     name: String,
-//     age: Number,
-//     health: String,
-//     hobby: String
-// }
-// const Cat = mongoose.model('cat1', schema);
-// const kitty = new Cat({ name: 'testZildjian' });
-// kitty.save().then(() => console.log('meow!'));
-// model名.find({查询条件}，callback(err, 查询结果)=>{})
 
 app.use('/',express.static('public'))
 app.use('/',express.static('photo'))
@@ -22,54 +11,88 @@ app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({ extended: false })) // for parsing application/x-www-form-urlencoded
 
 
-//用户登录
-var uname = ''
-var pwd = ''
-var vcode = ''
-app.post('/login', function (req, res, next) {
-    uname = req.body.username;
-    pwd = req.body.password;
-    vcode = req.body.vercode;
-    // console.log('uname: ' + req.body.username)
-    // console.log('pwd: ' + req.body.password)
-    // console.log('vcode: ' + req.body.vercode)
-    next();
-})
-app.use('/login', function (req, res, next) {
-    if(uname === 'zff' && pwd === '123'){
-        ejs.renderFile('public/index.html', {username: uname}, function(err, str){
-            // str => 输出渲染后的 HTML 字符串
+//用户注册
+app.post('/reg', function (req, res, next) {
+    var repeat = req.body.repeat;
+    const data = {
+        username: req.body.username,
+        password: req.body.password,
+        sex: req.body.sex,
+        birth: req.body.birth
+    };
+    if(repeat != data.password) {
+        ejs.renderFile('public/reg_info.html', {info: "两次输入的密码不一致!"}, function(err, str){
             if(err){console.log(err)}
-            else{
-                res.send(str);
-            }
+            else res.send(str);
         });
     }
-    else {
-        uname = ''
-        console.log("Error.")
-    }
-    next();
+    else DB.insert_user(data, res);
+});
+  
+
+
+//用户登陆
+app.post('/login', function (req, res, next) {
+    const data = {
+        username: req.body.username,
+        password: req.body.password,
+        vcode: req.body.vercode
+    };
+    DB.login_user(data, res);
 })
 
 
 //已登录则显示用户名
 app.get("/loginCheck",(req,res) => {
-    if(uname == '')res.send("未登录");
-    else res.send(uname);
+    DB.loginCheck(res);
 })
 
 
 //下拉列表
 app.get("/dropdown",(req,res) => {
-    if(uname == '')res.send("<a class='dropdown-item' href='login.html'>登录</a> <a class='dropdown-item' href='reg.html'>注册</a>");
-    else res.send("<a class='dropdown-item' href='changePwd.html'>修改密码</a> <a class='dropdown-item' onclick='logout()'>注销</a>"); 
+    DB.get_dropdown(res);
 })
 
 
 //注销
 app.get("/logout",(req,res) => {
-    uname = '';
+    DB.log_out();
 })
 
+
+// mongoose.connect('mongodb://172.21.2.236:27017/190110910539');
+// const schema1 = {
+    // user_id: Number,
+    // username: String,
+    // password: String,
+    // sex: String,
+    // birth: String,
+    // photo_name: String,
+    // reg_time: Date,
+    // last_visit: Date
+// }
+// const User = mongoose.model('t_user', schema1);
+// const kitty = new User({username: 'zff', password: '123'});
+// kitty.save().then(() => console.log('meow!'));
+
+// mongoose.connect('mongodb://172.21.2.236:27017/190110910539');
+// const schema2 = {
+//     blog_id: Number,
+//     author: String,
+//     title: String,
+//     body: String,
+//     time: Date,
+//     pageview: Number,
+//     like: Number,
+//     comment: Number
+// }
+// const Blog = mongoose.model('t_blog', schema2);
+// const kitty = new Blog({author: 'zww', title: 'xxx', body: 'xxxxxxxxxxxxxxxxxxxx'});
+// kitty.save().then(() => console.log('meow!'));
+
+// model名.find({查询条件}，callback(err, 查询结果)=>{})
+
+
 app.listen(10539)
+
+
