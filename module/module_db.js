@@ -2,9 +2,10 @@ const ejs = require('ejs')
 const mongoClient = require('mongodb').MongoClient;
 const DBPATH = 'mongodb://172.21.2.236:27017/190110910539';
 const DBNAME = '190110910539';
+const functions = require('./module_functions')
 var uname = '';
 
-//新用户录入
+//用户注册
 function insert_user(data, res) {
     mongoClient.connect(DBPATH, function (err, client) {
         if (err) console.log('数据库连接失败', err);
@@ -33,9 +34,7 @@ function insert_user(data, res) {
                         console.log('数据库已关闭');
                         ejs.renderFile('public/login_info.html', {info: "注册成功,请登录!"}, function(err, str){
                             if(err){console.log(err)}
-                            else{
-                                res.send(str);
-                            }
+                            else res.send(str);
                         });
                     })
                 }
@@ -46,7 +45,7 @@ function insert_user(data, res) {
 
 
 //用户登陆
-function login_user(data, res) {
+function login_user(data, req, res) {
     mongoClient.connect(DBPATH, function (err, client) {
         if (err) console.log('数据库连接失败', err);
         else {
@@ -57,10 +56,19 @@ function login_user(data, res) {
             db.collection("t_users").find({username: data.username, password: data.password}).toArray(function(err, result) {
                 if (err) throw err;
                 console.log('查询成功: '+result.length); //结果为数组
+                //登陆成功
                 if(result.length > 0) {
-                    client.close();
-                    console.log('数据库已关闭');
                     uname = data.username;
+                    var whereStr = {"username": uname};  // 查询条件
+                    var updateStr = {$set: {"last_visit" : functions.time()}};
+                    //更新该用户最新一次登陆的时间
+                    db.collection("t_users").updateOne(whereStr, updateStr,  function(err, res) {
+                        if (err) throw err;
+                        console.log("文档更新成功");
+                        client.close();
+                        console.log('数据库已关闭');
+                    });
+                    //跳转主页
                     ejs.renderFile('public/index.html', {}, function(err, str){
                         if(err){console.log(err)}
                         else res.send(str);
@@ -100,18 +108,56 @@ function log_out(){
 }
 
 
-//生成[l,r)区间内的随机数
-function random(l, r){
-    // 生成的这个随机数是一个小数，我们可以将其乘以100，来得到1-100之内的数
-    var num = Math.random()*100; 
-    // 向下取整
-    num = Math.floor(num);
-    return num%(r-l)+l;
+//发布博客
+function insert_blog(data, res) {
+    if(uname == ''){
+        ejs.renderFile('public/login_info.html', {info: "请先登陆！"}, function(err, str){
+            if(err){console.log(err)}
+            else res.send(str);
+        });
+    }
+    else{
+        mongoClient.connect(DBPATH, function (err, client) {
+            if (err) console.log('数据库连接失败', err);
+            else {
+                const db = client.db(DBNAME);
+                console.log('数据库连接成功');
+                data.author = uname;
+                //把博客信息录入数据库
+                db.collection('t_blogs').insertOne(data, function (err, result) {
+                    if (err) console.log('发布失败-数据库异常', err);
+                    else console.log('发布成功');
+
+                    client.close();
+                    console.log('数据库已关闭');
+                    ejs.renderFile('public/success.html', {blogId: ''}, function(err, str){
+                        if(err){console.log(err)}
+                        else res.send(str);
+                    });
+                })
+            }
+        });
+    }
 }
 
 
-module.exports = {insert_user, login_user, loginCheck, 
-    get_dropdown, log_out, random}
+//清空collection
+function clear_col(col) {
+    mongoClient.connect(DBPATH, function (err, client) {
+        if (err) console.log('数据库连接失败', err);
+        else {
+            const db = client.db(DBNAME);
+            console.log('数据库连接成功');
+            db.collection(col).remove({}, function (err, result) {
+                client.close();
+                console.log('数据库已关闭');
+            })
+        }
+    });
+}
+
+
+module.exports = {insert_user, login_user, loginCheck, get_dropdown, log_out, insert_blog, clear_col}
 
 // mongoose.connect('mongodb://172.21.2.236:27017/190110910539');
 // const schema = {

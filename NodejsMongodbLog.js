@@ -2,6 +2,7 @@ const express = require("express")
 const ejs = require('ejs')
 const app = express()
 const DB = require('./module/module_db')
+const functions = require('./module/module_functions')
 const mongoose = require('mongoose');
 
 app.use('/',express.static('public'))
@@ -15,10 +16,14 @@ app.use(express.urlencoded({ extended: false })) // for parsing application/x-ww
 app.post('/reg', function (req, res, next) {
     var repeat = req.body.repeat;
     const data = {
+        user_id: functions.get_userId(), 
         username: req.body.username,
         password: req.body.password,
         sex: req.body.sex,
-        birth: req.body.birth
+        birth: req.body.birth,
+        photo_name: functions.random(1,5),
+        reg_time: functions.time(),
+        last_visit: new Date()
     };
     if(repeat != data.password) {
         ejs.renderFile('public/reg_info.html', {info: "两次输入的密码不一致!"}, function(err, str){
@@ -39,6 +44,7 @@ app.post('/login', function (req, res, next) {
         vcode: req.body.vercode
     };
     DB.login_user(data, res);
+    
 })
 
 
@@ -59,6 +65,25 @@ app.get("/logout",(req,res) => {
     DB.log_out();
 })
 
+
+//发布博客
+app.post("/publish",(req,res) => {
+    const data = {
+        blog_id: functions.get_blogId(),
+        author: '',
+        title: req.body.title,
+        body: req.body.body,
+        time: functions.time(),
+        pageview: 0,
+        like: 0,
+        comment: 0
+    };
+    DB.insert_blog(data, res);
+})
+
+
+
+// DB.clear_col("t_blogs");
 
 // mongoose.connect('mongodb://172.21.2.236:27017/190110910539');
 // const schema1 = {
