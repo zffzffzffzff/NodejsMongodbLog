@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>539博客</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+  <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+<body style="background-color: #F0F0F0">
+
+	<div class="container">
+		<!-- 导航条 -->
+		<nav class="navbar navbar-expand-lg navbar-dark shadow" style="background-color: #171717;">
+			<button class="navbar-toggler" type="button" data-toggle="collapse"
+				data-target="#navbarTogglerDemo03"
+				aria-controls="navbarTogglerDemo03" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<a class="navbar-brand" href="/">539博客</a>
+			
+			<img alt="comment" src="../photo/pen.png" width=22px height=22px style="margin-left:30px; margin-right:0px">
+				
+			<div class="collapse navbar-collapse">
+				<ul class="navbar-nav mr-sm-0 mt-2 mt-lg-0">
+				<li class="nav-item">
+					<a class="nav-link" href="/article/listAdd" style="color:#E0E0E0" onmouseover="this.style.color='#FFFFFF'" onmouseout="this.style.color='#E0E0E0'">
+					创作中心
+					</a>
+				</li>
+				<li class="nav-item" style="margin-left:20px">
+					<a class="nav-link disabled" href="#">
+					19计算机2班 190110910539 朱芳菲
+					</a>
+				</li>
+				</ul>
+				
+				<form class="form-inline ml-auto my-2 my-lg-0" action="Query" style="width:300px; margin-right:10px">
+				<input class="form-control mr-sm-2 col-sm-7 ml-auto " type="search" name="search"
+					placeholder="请输入关键词" value="${key}" aria-label="Search" >
+				<button class="btn btn-outline-light my-2 my-sm-0" type="submit">搜索</button>
+				</form>
+				
+				<img alt="comment" src="../photo/head.png" width=25px height=25px style="margin-left:30px; margin-right:0px">
+				
+				<ul class="navbar-nav ml-sm-2 ml-auto col-sm-1">
+					<li class="nav-item dropdown">
+						<a id="Uname" class="nav-link dropdown-toggle active" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<%= userName %>
+						</a>
+
+						<!-- 下拉列表 -->
+						<div id="Dropdown" class="dropdown-menu" style="min-width:120%" aria-labelledby="navbarDropdown">
+							<!-- <a class='dropdown-item' href='changePwd.html'>修改密码</a>  -->
+							<a class='dropdown-item' href="/users/logOut">注销</a>
+						</div>
+						 
+						
+					</li>
+				</ul>
+				
+			</div>
+		</nav>
+
+		<!-- 内容 -->
+		<div class="row" style="margin-top: 15px">
+
+			<div class="col-9">
+
+				<div class="card shadow" style="margin-bottom: 10px">
+					<div class="card-header" style="font-weight: bold">博客详情</div>
+					<div class="card-body" style="height:450px">
+						<h2 class="card-title text-center"><%= blogInfo[0].title %></h2>
+
+						<p class="card-text"
+							style="font-size: 18px; margin: 20px; margin-top: 25px; height:100px">
+							<%= blogInfo[0].content %></p>
+					</div>
+					<div class="card-footer text-muted text-center">发布时间：${blog.timeCn}</div>
+				</div>
+				
+
+			</div>
+
+			<!-- 右边栏 -->
+			<div class="col-lg-3 ">
+        <div class="card shadow" style="margin-bottom:20px">
+
+          <div class="card-header" align="center" style="font-weight:bold">排行榜</div>
+          <div class="card-body" style="height:600px; padding:0px">
+            <form action="RankAction">
+            <table class="table table-hover">
+              <thead>
+                <tr align="center">
+                  <td scope="col" width="50%">用户名</td>
+                  <td scope="col" width="50%">总访问量</td>
+                </tr>
+              </thead>
+              <tbody>
+                <c:forEach items="${userRank}" var="user">
+                <tr align="center">
+                  <td>
+                    <a href="UserInfo?username=${user.username}&&flag=hot" style="color: #272727">
+                      ${user.username}
+                    </a>
+                  </td>
+                  <td>${user.sum}</td>
+                </tr>
+                </c:forEach>
+              </tbody>
+            </table>
+            </form>
+          </div>
+          <div class="card-footer text-muted text-center" style="height:40px;"></div>
+        
+        </div>
+			</div>
+
+		</div>
+	</div>
+
+</body>
+</html>

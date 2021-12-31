@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+  <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <title>我的记事本</title>
+</head>
+
+<body>
+  <% articleList.map(function(item, index) { %>
+  <div class="row">
+   <div>
+    <p style="margin-left: 20px;">序号：<%= index+1 %></p>
+    <p style="margin-left: 20px;">主题：<%= item.title %></p>
+    <p style="margin-left: 20px;">内容：<%= item.content %></p>
+    <div style="display: flex;">
+      <form action="/article/listEdit" method="get">
+        <input type="text" name="articleId" value="<%= item.articleId %>" hidden>
+        <button type="submit" class="btn btn-primary" style="margin-left: 20px;">编辑</button>
+      </form>
+      <form action="/article/listDelete" method="post">
+        <input type="text" name="articleId" value="<%= item.articleId %>" hidden>
+        <button type="submit" class="btn btn-primary" style="margin-left: 50px;">删除</button>
+      </form>
+    </div>
+
+   </div>
+      
+    
+  </div>
+  <% }) %>
+</body>
+
+</html>

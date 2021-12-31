@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我的记事本</title>
+  <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+  <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+  <form action="/article/listEdit" method="post">
+    <input type="text" name="articleId" value="<%= article.articleId %>" hidden>
+    <input type="text" name="title" value="<%= article.title %>"><br>
+    <textarea name="content" id="content" cols="30" rows="10" style="margin-top: 10px;"><%= article.content%></textarea>
+    <div class="col-sm-3">
+      <button type="submit" class="btn btn-primary">修改</button>
+    </div>
+  </form>
+</body>
+
+</html>

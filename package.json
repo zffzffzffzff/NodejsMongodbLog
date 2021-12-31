@@ -1,23 +1,19 @@
 {
-  "name": "nodejsmongodblog",
-  "version": "1.0.0",
-  "description": "WebApp for Login use nodejs and mongodb",
-  "main": "NodejsMongodbLog.js",
+  "name": "zuoye",
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon ./bin/www"
   },
-  "keywords": [
-    "nodejs",
-    "mongodb",
-    "login"
-  ],
-  "author": "zff",
-  "license": "GNU",
-  "git repository": "https://github.com/zffzffzffzff/NodejsMongodbLog",
   "dependencies": {
-    "bootstrap": "^5.1.3",
-    "ejs": "^3.1.6",
-    "express": "^4.17.1",
-    "mongoose": "^6.1.0"
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "ejs": "~2.6.1",
+    "express": "~4.16.1",
+    "express-session": "^1.17.2",
+    "http-errors": "~1.6.3",
+    "mongodb": "^3.4.1",
+    "morgan": "~1.9.1",
+    "nodemon": "^2.0.15"
   }
 }
