@@ -40,7 +40,7 @@
 				
 				<form class="form-inline ml-auto my-2 my-lg-0" action="/article/query" style="width:300px; margin-right:10px">
 				<input class="form-control mr-sm-2 col-sm-7 ml-auto " type="search" name="search"
-					placeholder="请输入关键词" value="${key}" aria-label="Search" >
+					placeholder="请输入关键词" aria-label="Search" >
 				<button class="btn btn-outline-light my-2 my-sm-0" type="submit">搜索</button>
 				</form>
 				
@@ -54,13 +54,12 @@
 
 						<!-- 下拉列表 -->
 						<div id="Dropdown" class="dropdown-menu" style="min-width:120%" aria-labelledby="navbarDropdown">
+							<a class="dropdown-item" href="/article/myBlog">我的博客</a>
 							<% if (!admin) { %>
-								<a class="dropdown-item" href="/article/myBlog">我的博客</a>
 								<a class="dropdown-item" href="/users/changePwd">修改密码</a>
 							<% } else { %>
 								<a class="dropdown-item" href="/article/admin">博客管理</a>
 							<% } %>
-							<!-- <a class='dropdown-item' href='changePwd.html'>修改密码</a>  -->
 							<a class="dropdown-item" href="/users/logOut">注销</a>
 						</div>
 						 

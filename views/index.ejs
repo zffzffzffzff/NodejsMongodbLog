@@ -53,13 +53,12 @@
 						</a>
 						<!-- 下拉列表 -->
 						<div id="Dropdown" class="dropdown-menu" style="min-width:120%" aria-labelledby="navbarDropdown">
+							<a class="dropdown-item" href="/article/myBlog">我的博客</a>
 							<% if (!admin) { %>
-								<a class="dropdown-item" href="/article/myBlog">我的博客</a>
 								<a class="dropdown-item" href="/users/changePwd">修改密码</a>
 							<% } else { %>
 								<a class="dropdown-item" href="/article/admin">博客管理</a>
 							<% } %>
-							<!-- <a class='dropdown-item' href='changePwd.html'>修改密码</a>  -->
 							<a class="dropdown-item" href="/users/logOut">注销</a>
 						</div>
 						 
@@ -106,7 +105,7 @@
 										<p><%= blogList[0].content %></p>
 										<br>
 										<p>Author：
-											<a href="#" style="color: #FFFFFF">
+											<a style="color: #FFFFFF">
 												<%= blogList[0].userName %>
 											</a>
 										</p>
@@ -127,7 +126,7 @@
 										<p><%= blogList[1].content %></p>
 										<br>
 										<p>Author：
-											<a href="#" style="color: #FFFFFF">
+											<a style="color: #FFFFFF">
 												<%= blogList[1].userName %>
 											</a>
 										</p>
@@ -148,7 +147,7 @@
 										<p><%= blogList[2].content %></p>
 										<br>
 										<p>Author：
-											<a href="#" style="color: #FFFFFF">
+											<a style="color: #FFFFFF">
 												<%= blogList[2].userName %>
 											</a>
 										</p>
