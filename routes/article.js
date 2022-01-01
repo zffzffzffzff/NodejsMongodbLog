@@ -4,19 +4,31 @@ var router = express.Router();
 var model = require('../model');
 var cache = require('../cache');
 var utils = require('../share/utils');
+var functions = require('../share/functions');
 
-// 博客列表
-router.get('/list', function (req, res, next) {
+// 博客查询
+router.get('/query', function (req, res, next) {
   model.connect(function (db) {
     const blog = db.collection('blog');
-    var mysort = { _id: 1 }; //1为升序， -1为降序
-    blog.find({}).sort(mysort).toArray(function (err, resData) {
+    var mysort = { time: -1 }; //1为升序， -1为降序
+    var query = req.query.search;
+    const condition = {
+      $or: [
+        {"userName": {$regex:query}},
+        {"title": {$regex:query}},
+        {"content": {$regex:query}}
+      ]
+    }
+    blog.find(condition).sort(mysort).toArray(function (err, resData) {
       if (err) {
         console.log('博客列表查询失败');
         res.redirect('/');
       } else {
-        res.render('/', {
-          articleList: resData
+        res.render('blogList', {
+          userName: req.session.userName,
+          blogList: resData,
+          userList: req.session.userList,
+          admin: req.session.admin
         });
       }
     });
@@ -24,10 +36,13 @@ router.get('/list', function (req, res, next) {
 });
 
 
+
 // 新增博客
 router.get('/listAdd', function (req, res, next) {
   res.render('listAdd', {
-    userName: req.session.userName
+    userName: req.session.userName,
+    userList: req.session.userList,
+    admin: req.session.admin
   });
 });
 
@@ -38,7 +53,8 @@ router.post('/listAdd', function (req, res, next) {
     userName: userInfo.userName,
     blogId: utils.getUuid(),
     title: req.body.title,
-    content: req.body.content
+    content: req.body.content,
+    time: functions.time()
   };
   model.connect(function (db) {
     const blog = db.collection('blog');
@@ -60,7 +76,9 @@ router.post('/listAdd', function (req, res, next) {
             } else {
               res.render('blogInfo', {
                 blogInfo: resData,
-                userName: req.session.userName
+                userName: req.session.userName,
+                userList: req.session.userList,
+                admin: req.session.admin
               });
             }
           });
@@ -70,68 +88,83 @@ router.post('/listAdd', function (req, res, next) {
   });
 })
 
-// 删除内容
-router.post('/listDelete', function (req, res, next) {
-  const condition = {
-    articleId: req.body.articleId
-  };
-  model.connect(function (db) {
-    const article = db.collection('article');
-    article.deleteOne(condition, function (err, resData) {
-      if (err) {
-        console.log('删除博客失败');
-        res.redirect('/article/list');
-      } else {
-        res.redirect('/article/list');
-      }
-    });
-  });
-});
 
-// 修改内容
-router.get('/listEdit', function (req, res, next) {
-  const condition = {
-    articleId: req.query.articleId
-  };
+// 博客管理
+router.get('/admin', function (req, res, next) {
   model.connect(function (db) {
-    const article = db.collection('article');
-    article.find(condition).toArray(function (err, resData) {
+    const blog = db.collection('blog');
+    var mysort = { time: -1 }; //1为升序， -1为降序
+    blog.find({}).sort(mysort).toArray(function (err, resData) {
       if (err) {
-        console.log('修改博客-文章查询失败');
-        res.redirect('/article/list');
+        console.log('博客列表查询失败');
       } else {
-        res.render('listEdit', {
-          article: resData[0]
+        res.render('admin', {
+          userName: req.session.userName,
+          blogList: resData,
+          userList: req.session.userList,
+          admin: req.session.admin
         });
       }
     });
   });
 });
 
-router.post('/listEdit', function (req, res, next) {
-  const userInfo = cache.getCache('userInfo');
-  const condition = {
-    articleId: req.body.articleId
-  };
-  const data = {
-    userId: userInfo.userId,
-    articleId: req.body.articleId,
-    title: req.body.title,
-    content: req.body.content
-  };
+
+// 我的博客
+router.get('/myBlog', function (req, res, next) {
   model.connect(function (db) {
-    const article = db.collection('article');
-    article.updateOne(condition, {
-      $set: data
-    }, function (err, resData) {
+    const blog = db.collection('blog');
+    var mysort = { time: -1 }; //1为升序， -1为降序
+    blog.find({userName: req.session.userName}).sort(mysort).toArray(function (err, resData) {
       if (err) {
-        console.log('修改博客失败');
-        res.redirect('/article/list');
+        console.log('博客列表查询失败');
       } else {
-        res.redirect('/article/list');
+        res.render('myBlog', {
+          userName: req.session.userName,
+          blogList: resData,
+          userList: req.session.userList,
+          admin: req.session.admin
+        });
       }
     });
   });
 });
+
+
+// 删除博客（管理员）
+router.post('/blogDelete', function (req, res, next) {
+  const condition = {
+    blogId: req.body.blogId
+  };
+  model.connect(function (db) {
+    const blog = db.collection('blog');
+    blog.deleteOne(condition, function (err, resData) {
+      if (err) {
+        console.log('删除博客失败');
+      } else {
+        res.redirect('/article/admin');
+      }
+    });
+  });
+});
+
+
+// 删除自己的博客
+router.post('/myBlogDelete', function (req, res, next) {
+  const condition = {
+    blogId: req.body.blogId
+  };
+  model.connect(function (db) {
+    const blog = db.collection('blog');
+    blog.deleteOne(condition, function (err, resData) {
+      if (err) {
+        console.log('删除博客失败');
+      } else {
+        res.redirect('/article/myBlog');
+      }
+    });
+  });
+});
+
 
 module.exports = router;

@@ -4,6 +4,7 @@ var router = express.Router();
 var model = require('../model');
 var cache = require('../cache');
 var utils = require('../share/utils');
+var functions = require('../share/functions');
 
 /* GET users listing. */
 router.get('/', function (req, res, next) {
@@ -12,7 +13,9 @@ router.get('/', function (req, res, next) {
 
 // 登录路由
 router.get('/login', function (req, res, next) {
-  res.render('login', {})
+  res.render('login', {
+    info: ""
+  })
 });
 
 // 注册路由
@@ -30,6 +33,7 @@ router.post('/regist', function (req, res, next) {
     userPwd: req.body.userPwd,
     sex: req.body.sex,
     birth: req.body.birth,
+    time: functions.date()
   };
   model.connect(function (db) {
     const users = db.collection('users');
@@ -64,15 +68,75 @@ router.post('/login', function (req, res, next) {
           cache.setCache('userInfo', resData[0]);
           // 登录会话保持
           req.session.userName = data.userName;
+          // 管理员身份确认
+          if(data.userName == "admin")
+            req.session.admin = true;
+          else
+            req.session.admin = false;
           res.redirect('/');
         } else {
           console.log('用户名或密码错误',data);
-          res.redirect('/users/login');
+          res.render('login', {
+            info: "用户名或密码错误！"
+          })
         }
       }
     })
   });
 })
+
+
+// 修改密码
+router.get('/changePwd', function (req, res, next) {
+  res.render('changePwd', {
+    info: ""
+  })
+});
+
+router.post('/changePwd', function (req, res, next) {
+  var oldPwd = req.body.oldPwd;
+  var newPwd = req.body.newPwd;
+  var repeat = req.body.repeat;
+  var userName = req.session.userName;
+  model.connect(function (db) {
+    const users = db.collection('users');
+    users.find({userName: userName, userPwd: oldPwd}).toArray(function (err, resData) {
+      if (err) {
+        console.log('查询失败');
+      } else {
+        if(resData.length==0){
+          res.render('changePwd', {
+            info: "原密码错误！"
+          })
+        } else {
+          if(repeat != newPwd){
+            res.render('changePwd', {
+              info: "两次输入的密码不一致！"
+            });
+          }
+          else {
+            model.connect(function (db) {
+              const users = db.collection('users');
+              users.updateOne({userName: userName, userPwd: oldPwd}, {
+                $set: {userPwd: newPwd}
+              }, function (err, resData) {
+                if (err) {
+                  console.log('修改失败');
+                } else {
+                  res.render('login', {
+                    info: "修改成功！请登陆！"
+                  });
+                }
+              });
+            })
+          }
+        }
+      }
+    });
+  });
+});
+
+
 
 // 退出登录
 router.get('/logOut', function (req, res, next) {

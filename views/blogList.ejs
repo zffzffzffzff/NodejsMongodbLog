@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>539博客</title>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
-	<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
-	<script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
-	<script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <title>539博客</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+  <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </head>
-
 <body style="background-color: #F0F0F0">
 
 	<div class="container">
@@ -40,9 +39,9 @@
 				</ul>
 				
 				<form class="form-inline ml-auto my-2 my-lg-0" action="/article/query" style="width:300px; margin-right:10px">
-				<input class="form-control mr-sm-2 col-sm-7 ml-auto " type="search" name="search"
-					placeholder="请输入关键词" value="${key}" aria-label="Search" required>
-				<button class="btn btn-outline-light my-2 my-sm-0" type="submit">搜索</button>
+					<input class="form-control mr-sm-2 col-sm-7 ml-auto " type="search" name="search"
+						placeholder="请输入关键词" aria-label="Search" required>
+					<button class="btn btn-outline-light my-2 my-sm-0" type="submit">搜索</button>
 				</form>
 				
 				<img alt="comment" src="../photo/head.png" width=25px height=25px style="margin-left:30px; margin-right:0px">
@@ -50,7 +49,7 @@
 				<ul class="navbar-nav ml-sm-2 ml-auto col-sm-1">
 					<li class="nav-item dropdown">
 						<a id="Uname" class="nav-link dropdown-toggle active" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						<%= userName %>
+							<%= userName %>
 						</a>
 
 						<!-- 下拉列表 -->
@@ -75,32 +74,40 @@
 		<!-- 内容 -->
 		<div class="row" style="margin-top: 15px">
 
-			<div class="col-9">
-
+			<div class="col-9" style="margin-bottom:20px">
+			
 				<div class="card shadow">
-					<div class="card-header" align="center" style="font-weight: bold">创作中心</div>
-					<div class="card-body" style="padding:30px; height:450px">
-
-						<form action="/article/listAdd" method="post">
-							<div class="form-group">
-								<label style="margin-left: 5px">标题：</label> 
-								<input type="text" class="form-control" name="title"
-									placeholder="请输入标题" required>
-							</div>
-							<div class="form-group">
-								<label style="margin-left: 5px">正文：</label>
-								<textarea class="form-control" name="content" placeholder="请输入正文" rows="7" required></textarea>
-							</div>
+					
+  					<div class="card-header" style="font-weight:bold; height:50px" >
+  						<p style="margin-left:10px">博客列表</p>
+  					</div>
+					
+					<div class="card-body" style="padding:0px;">
+						<div style="padding:20px; padding-left:30px">
 							
-							<div style="width:100%; margin-top:40px">
-								<a type="button" class="btn btn-dark" style="float:right; border-radius:5px" href="/">取消</a>
-								<button type="submit" class="btn btn-dark" style="float:right; margin-right:20px">发布</button>
-							</div>
-						
-						</form>
+							<% for(var i=0;i < blogList.length;i++){ %>
+								<div style="padding-bottom: 20px;">
+								
+									<div>
+										<div style="font-weight: bold">
+											<p><%= blogList[i].title %></p>
+										</div>
+										<div style="margin-top:10px">
+											<p><%= blogList[i].content %></p>
+										</div>
+									</div>
+
+									<div class="float-right" style="margin-right:25px; margin-top:10px">
+										<p>—— <%= blogList[i].userName %>  &nbsp;&nbsp; <%= blogList[i].time %></p>
+									</div>
+									
+								</div>
+								<div class="dropdown-divider" style="height:20px; width:100%"></div>
+			        		
+							<% } %>
+						</div>
 						
 					</div>
-					<div class="card-footer text-muted text-center" style="height: 49px;"></div>
 				
 				</div>
 
@@ -110,29 +117,29 @@
 			<div class="col-lg-3 ">
 				<div class="card shadow" style="margin-bottom:20px">
 
-					<div class="card-header" align="center" style="font-weight:bold">用户列表</div>
-					<div class="card-body" style="height:600px; padding:0px">
-						<form action="RankAction">
-						<table class="table table-hover">
-						<thead>
-							<tr align="center">
-							<td scope="col" width="45%">用户名</td>
-							<td scope="col" width="55%">注册时间</td>
-							</tr>
-						</thead>
-						<tbody>
-							<% for(var i=0;i < userList.length;i++){ %>
-							<tr align="center">
-							<td><%= userList[i].userName %></td>
-							<td><%= userList[i].time %></td>
-							</tr>
-							<% } %>
-						</tbody>
-						</table>
-						</form>
-					</div>
-					<div class="card-footer text-muted text-center" style="height:40px;"></div>
-					
+				<div class="card-header" align="center" style="font-weight:bold">用户列表</div>
+				<div class="card-body" style="height:600px; padding:0px">
+					<form action="RankAction">
+					<table class="table table-hover">
+					<thead>
+						<tr align="center">
+						<td scope="col" width="45%">用户名</td>
+						<td scope="col" width="55%">注册时间</td>
+						</tr>
+					</thead>
+					<tbody>
+						<% for(var i=0;i < userList.length;i++){ %>
+						<tr align="center">
+						<td><%= userList[i].userName %></td>
+						<td><%= userList[i].time %></td>
+						</tr>
+						<% } %>
+					</tbody>
+					</table>
+					</form>
+				</div>
+				<div class="card-footer text-muted text-center" style="height:40px;"></div>
+				
 				</div>
 			</div>
 

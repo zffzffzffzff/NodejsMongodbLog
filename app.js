@@ -31,7 +31,7 @@ app.use(session({
   resave: false,      //一个请求在另一个请求结束时对session进行修改覆盖并保存，默认值为true，建议设为false
   saveUninitialized: true,  //无论是否使用session，默认只要对面发起请求，都会给客户端一个cookie
   cookie: {
-    maxAge: 1000 * 60 * 5
+    maxAge: 1000 * 60 * 20
   } // 指定登录会话的有效时长
 }));
 

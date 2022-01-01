@@ -24,7 +24,11 @@
 				<img src="../photo/person.png" width=25% >
 		        <div class="dropdown-divider" style="margin-bottom:8px; margin-top:25px"></div>
 		        
-				<p style="color:red; height:20px"></p>
+				<p style="color:red; height:20px">
+					<% if (info) { %>
+						<%= info %>
+					<% } %>
+				</p>
 				
 				<form name="login" action="/users/login" onsubmit="return validateForm()" method="POST" style="width:90%; margin-top:10px">
 					<div class="form-group row" style="margin-bottom:45px">
